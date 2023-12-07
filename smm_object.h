@@ -17,6 +17,12 @@
 #define SMMNODE_TYPE_FESTIVAL           6
 #define SMMNODE_TYPE_MAX                7
 
+typedef enum smmObjType{
+        smmObjType_board =0,
+        smmObjType_card,
+        smmObjType_grade
+        }smmObjType_e;
+
 /* node type :
     lecture,
     restaurant,

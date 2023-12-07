@@ -13,11 +13,25 @@
 #define MAX_GRADE       9
 
 
+typedef enum smmObjGrade{
+        smmObjGrade_Ap =0,
+        smmObjGrade_A0,
+        smmObjGrade_A-,
+        smmObjGrade_Bp,
+        smmObjGrade_B0,
+        smmObjGrade_B-,
+        smmObjGrade_Cp,
+        smmObjGrade_C0,
+        smmObjGrade_C-,
+        }smmObjGrade_e;
+//1. 구조체 
 typedef struct smmObject {
        char name[MAX_CHARNAME];
+       smmObjType_e objtype; 
        int type;
        int credit;
        int energy;
+       smmObjGrade_e grade;
        
        } smmObject_t;
 
@@ -30,7 +44,8 @@ static int smm_node_credit[MAX_NODE];
 static int smm_node_energy[MAX_NODE];
 #end if
 
-static int smmObj_noNode = 0;
+//2. 구조체 변수 정의  
+//static int smmObj_noNode = 0;
 //object generation
 void smmObj_genNode(void)
 {
@@ -40,16 +55,33 @@ void smmObj_genNode(void)
     smm_node_energy[smmObj_noNode].energy = energy;
 }
 
+//3. 수정  
+void* smmObj_genObject(char* name, smmObjGrade_e grade, smmObjGrade_e objtype)
+{
+ smmObject_t* ptr;
+ ptr = (smmObject_t*)malloc(sizeof(smmObject_y));
 
+    strcpy(ptr->name, name);
+    ptr->objType = objType;
+    ptr->type = type;
+    ptr->credit = credit;
+    ptr->energy = energy;
+    ptr->grade = grade;
+    
+    
+    return ptr;
+   
+}
 
 //member retrieving
 
 
-
+//3. 관련함수 변경  
 //element to string
-char* smmObj_getNodeName(int node_nr) 
+char* smmObj_getNodeName(void* obj) 
 {
-    return smm_node[node.nr].name;
+    smmObject_t* ptr = (smmObject_t*)obj;
+    return ptr->name;
 }
 
 int smmObj_getNodeType(int node_nr){

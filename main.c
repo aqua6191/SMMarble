@@ -35,6 +35,8 @@ typedef struct player{
         
 static player_t cur_player[MAX_PLAYER];
 
+static player_t *cur_player;
+
 #if0
 static int player_energy[MAX_NODE];
 static int player_position[MAX_NODE];
@@ -53,6 +55,16 @@ smmGrade_e takeLecture(int player, char* lectureName, int credit); //take the le
 void* findGrade(int player, char* lectureName); //find the grade from the player's grade history
 void printGrades(int player); //print all the grade history of the player
 #endif
+
+void printPlayerStatus(void){
+     int i;
+     for(i=0;i<player_nr;i++){
+                              printf("%s : credit %i,"  //수정필요!~ 
+                              
+                              }
+     
+     
+     }
 
 
 void generatePlayers(int n, int initEnergy){ ////여기 수정!!!  
@@ -92,10 +104,21 @@ int rolldie(int player)
 #if 0
 //action code when a player stays at a node
 void actionNode(int player)
-{
+{    
+     void *boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position);
+    // int type = smmObj_getNodeType(cur_player[player].position);
+    int type = smmObj_getNodeType(boardPtr);
+    
     switch (type)
     {
         //case lecture:
+    case SMMNODE_TYPE_LECTURE;
+    //if
+    cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+    cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
+    break;
+    
+    
     default:
         break;
     }
@@ -130,11 +153,15 @@ int main(int argc, const char* argv[]) {
     }
 
     printf("Reading board component......\n");
-    while (fscanf(fp, "%s %i %i %i", name, &type, &credit, &energy) == 4) //read a node parameter set
+     while (fscanf (fp, "%s %i %i %i", name, &type, &credit, &energy, &grade)) //read a festival card string
     {
         //store the parameter set
-        smmObj_genNode(name, type, credit, energy);
+        void *boardObj = smmObj_genObject(name, smmObjType_board, type, credit, energy, 0);
+        smmdb_addTail(LISTNO_NODE, boardObj);
+        if(type == SMMNODE_TYPE_HOME)
+        initEnergy = energy;
         board_nr++;
+         
     }
     fclose(fp);
     printf("Total number of board nodes : %i\n", board_nr);
@@ -142,7 +169,7 @@ int main(int argc, const char* argv[]) {
     for (i = 0; i < board_nr; i++)
         printf("node %i : %s, %i\n", i, smmObj_getNodeName(i), smmObj_getNodeType(i));
 
-
+        #if0
     //2. food card config 
     if ((fp = fopen(FOODFILEPATH, "r")) == NULL)
     {
@@ -168,12 +195,20 @@ int main(int argc, const char* argv[]) {
     }
 
     printf("\n\nReading festival card component......\n");
-    while () //read a festival card string
+    while (fscanf (fp, "%s %i %i %i", name, &type, &credit, &energy, &grade)) //read a festival card string
     {
         //store the parameter set
+        //수정
+        void *boardObj = smmObj_genObject(name, smmObjType_board, type, credit, energy, 0);
+        smmdb_addTail(LISTNO_NODE, boardObj);
+        if(type == SMMNODE_TYPE_HOME)
+        initEnergy = energy;
+        board_nr++;
+         
     }
     fclose(fp);
     printf("Total number of festival cards : %i\n", festival_nr);
+    #endif
 
 
 
@@ -189,6 +224,9 @@ int main(int argc, const char* argv[]) {
     
     }
     while (player_nr< 0 || player > MAX_PLAYER);
+    
+    cur_player = (player_t*)malloc(player_nr size of(player_t)); ///애매함 수정...... 
+    
     generatePlayers(player_nr, initEnergy);
     
     
@@ -206,15 +244,17 @@ int main(int argc, const char* argv[]) {
 
 
         //4-3. go forward
-        goForward();
+        goForward(turn, die_result);
 
         //4-4. take action at the destination node of the board
         actionNode();
 
         //4-5. next turn
+        turn = (turn +1)%player_nr;
 
     }
 #endif
+      free(cur_player);
     system("PAUSE");
     return 0;
 }
