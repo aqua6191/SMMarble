@@ -23,6 +23,7 @@ typedef enum smmObjType{
         smmObjType_grade
         }smmObjType_e;
 
+void *smmObj_genObject(const char *name, smmObjType_e type, int credit, int energy, int grade);
 /* node type :
     lecture,
     restaurant,
