@@ -1,188 +1,164 @@
+//
+//  SMMarble
+//
 #include <time.h>
 #include <string.h>
-#include "smm_object.h"
-#include "smm_database.h"
+#include <string.h>
 #include "smm_common.h"
+#include "smm_object.h"
 
-#define BOARDFILEPATH "marbleBoardConfig.txt"
-#define FOODFILEPATH "marbleFoodConfig.txt"
-#define FESTFILEPATH "marbleFestivalConfig.txt"
+#define MAX_NODE        100
+#define MAX_NODETYPE    7 //0-6
+#define MAX_GRADE       9
 
-#define MAX_NODE 100
+static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] = {
+	"lecture",
+	"restaurant",
+	"laboratory",
+	"home",
+	"gotolab",
+	"foodchance",
+	"festival"
+};
 
-// board configuration parameters
-static int board_nr;
-static int food_nr;
-static int festival_nr;
+typedef enum smmObjGrade {
+	smmObjGrade_Ap = 0,
+	smmObjGrade_A0,
+	smmObjGrade_Am,
+	smmObjGrade_Bp,
+	smmObjGrade_B0,
+	smmObjGrade_Bm,
+	smmObjGrade_Cp,
+	smmObjGrade_C0,
+	smmObjGrade_Cm
+} smmObjGrade_e;
+//성적 숫자로 저장 
 
-static int player_nr;
+static char smmGradeName [9][2]={
+	"A+",
+	"A0",
+	"Am", //- 기호를 m로 나타냄 
+	"B+",
+	"B0",
+	"Bm",
+	"C+",
+	"C0",
+	"Cm",
+};
+//성적 이름 
 
-typedef struct player
-{
-    int energy;
-    int position;
-    int name[MAX_CHARNAME];
-    int accumCredit;
-    int flag_graduate;
-} player_t;
 
-static player_t *cur_player;
+typedef struct smmObject{
+	char name[MAX_CHARNAME];
+	smmObjType_e objType;
+	int type;
+	int credit;
+	int energy;
+	smmObjGrade_e grade;
+} smmObject_t;
 
-// function prototypes
-void printPlayerStatus(void);
-void generatePlayers(int n, int initEnergy);
-int rolldie(void); // 수정: 매개변수가 필요없는 경우 void로 변경
+//2. 구조체 배열 변수 정의 
 
-// ...
-
-// 수정: generatePlayers 함수에서 name 배열을 입력 받도록 변경
-void generatePlayers(int n, int initEnergy)
-{
-    int i;
-    // n time loop
-    for (i = 0; i < n; i++)
-    {
-        // 수정: name 배열을 입력 받음
-        printf("Enter player name: ");
-        scanf("%s", cur_player[i].name);
-        // set position
-        cur_player[i].position = 0;
-        // set energy
-        cur_player[i].energy = initEnergy;
-    }
-}
-
-int rolldie(void)
-{
-    char c;
-    printf(" Press any key to roll a die (press g to see grade): ");
-    c = getchar();
-    fflush(stdin);
-
-#if 0
-    if (c == 'g')
-        printGrades(player);
+//static smmObject_t smm_node[MAX_NODE];
+ 
+#if 0 //if 0 - end if 하면 중간에 있는 건 다 지워짐! 
+static char smmObj_name[MAX_NODE][MAX_CHARNAME];
+static int smmObj_type[MAX_NODE];
+static int smmObj_credit[MAX_NODE];
+static int smmObj_energy[MAX_NODE];
+static int smmObj_noNode=0;
 #endif
 
-    return (rand() % MAX_DIE + 1);
-}
-int main(int argc, const char *argv[])
+char* smmObj_getTypeName (int type)
 {
-    FILE *fp;
-    char name[MAX_CHARNAME];
-    int type;
-    int credit;
-    int energy;
-    int i;
-
-    int initEnergy = 0;
-
-    board_nr = 0;
-    food_nr = 0;
-    festival_nr = 0;
-
-    srand(time(NULL));
-
-    // 1. import parameters ---------------------------------------------------------------------------------
-    // 1-1. boardConfig
-    if ((fp = fopen(BOARDFILEPATH, "r")) == NULL)
-    {
-        printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", BOARDFILEPATH);
-        getchar();
-        return -1;
-    }
-
-    printf("Reading board component......\n");
-    while (fscanf(fp, "%s %i %i %i", name, &type, &credit, &energy) != EOF)
-    {
-        void *boardObj = (void *)smmObj_genObject(name, smmObjType_board, type, credit, energy, NULL);
-        smmdb_addTail(LISTNO_NODE, boardObj);
-        if (type == SMMNODE_TYPE_HOME)
-            initEnergy = energy;
-        board_nr++;
-    }
-    fclose(fp);
-
-    printf("Total number of board nodes : %i\n", board_nr);
-
-    for (i = 0; i < board_nr; i++)
-        printf("node %i : %s, %i\n", i, smmObj_getNodeName(i), smmObj_getNodeType(i));
-
-#if 0
-    // 2. food card config
-    if ((fp = fopen(FOODFILEPATH, "r")) == NULL)
-    {
-        printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FOODFILEPATH);
-        return -1;
-    }
-
-    printf("\n\nReading food card component......\n");
-    while () // read a food parameter set
-    {
-        // store the parameter set
-    }
-    fclose(fp);
-    printf("Total number of food cards : %i\n", food_nr);
-
-    // 3. festival card config
-    if ((fp = fopen(FESTFILEPATH, "r")) == NULL)
-    {
-        printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FESTFILEPATH);
-        return -1;
-    }
-
-    printf("\n\nReading festival card component......\n");
-    while (fscanf(fp, "%s %i %i %i", name, &type, &credit, &energy) != EOF)
-    {
-        void *boardObj = smmObj_genObject(name, smmObjType_board, type, credit, energy, NULL);
-        smmdb_addTail(LISTNO_NODE, boardObj);
-        if (type == SMMNODE_TYPE_HOME)
-            initEnergy = energy;
-        board_nr++;
-    }
-    fclose(fp);
-    printf("Total number of festival cards : %i\n", festival_nr);
-#endif
-
-    // 2. Player configuration ---------------------------------------------------------------------------------
-
-    do
-    {
-        printf("input player number:");
-        scanf("%d", &player_nr);
-        fflush(stdin);
-
-    } while (player_nr < 0 || player_nr > MAX_PLAYER);
-
-    cur_player = (player_t *)malloc(player_nr * sizeof(player_t));
-
-    // 수정: generatePlayers 함수에서 name 배열을 입력 받도록 변경
-    generatePlayers(player_nr, initEnergy);
-
-#if 0
-    // 3. SM Marble game starts ---------------------------------------------------------------------------------
-    while (1)
-    {
-        int die_result;
-
-        // 4-1. initial printing
-        printPlayerStatus();
-
-        // 4-2. die rolling (if not in experiment)
-        die_result = rolldie();
-
-        // 4-3. go forward
-        goForward(turn, die_result);
-
-        // 4-4. take action at the destination node of the board
-        actionNode();
-
-        // 4-5. next turn
-        turn = (turn + 1) % player_nr;
-    }
-#endif
-
-    free(cur_player);
-    system("PAUSE");
-    return 0;
+	return (char*)smmNodeName[type];
 }
+/*유형의 이름을 출력할 수 있는 함수 */
+
+//1. 구조체 형식 정의
+
+
+//main.c에서 필요할 때 (genObject 부를 때) 이거를 .c에서 .h로 옮기면 main에서 사용 가능 
+/*typedef enum smmObjType {
+	smmObjType_board = 0,
+	smmObjType_card,
+	smmObjType_grade
+} smmObjType_e;*/
+
+
+//object generation
+void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade)
+{
+	smmObject_t* ptr;
+	
+	ptr = (smmObject_t*)malloc(sizeof(smmObject_t));
+	
+	strcpy (ptr->name, name);
+    ptr->objType = objType;
+    ptr->type = type;
+    ptr->credit = credit;
+    ptr->energy = energy;
+    ptr->grade = grade;
+    
+    return ptr;
+    //strcpy (smm_node[smmObj_noNode].name, name);
+    //smm_node[smmObj_noNode].type = type;
+    //smm_node[smmObj_noNode].credit = credit;
+    //smm_node[smmObj_noNode].energy = energy;
+    
+    //smmObj_noNode++;
+}
+
+
+
+int smmObj_getNodeType(void* obj)
+{
+	smmObject_t* ptr = (smmObject_t*)obj;
+	
+	return ptr->type;
+    //return smm_node[node_nr].type;
+}
+
+int smmObj_getNodeCredit(void* obj)
+{
+	smmObject_t* ptr = (smmObject_t*)obj;
+	
+	return ptr->credit;
+	//return smm_node[node_nr].credit;
+}
+
+int smmObj_getNodeEnergy(void* obj)
+{
+	smmObject_t* ptr = (smmObject_t*)obj;
+	
+	return ptr->energy;
+	//return smm_node[node_nr].energy;
+}
+//member retrieving
+
+
+
+//element to string
+char* smmObj_getNodeName(void* obj)
+{
+	
+	smmObject_t* ptr = (smmObject_t*)obj;
+	
+	return ptr->name;
+    //return smmNodeName[type];
+}
+//노드의 이름을 불러옴 
+
+int smmObj_getNodeGrade(void* obj){
+	smmObject_t* ptr = (smmObject_t*)obj;
+	return ptr->grade;	
+}
+//성적을 불러옴 
+
+char* smmObj_getGradeName(int grade)
+{
+//printf("Grade Name Check %d!!!\n", grade);
+//printf("%s\n",smmGradeName[grade]);
+    return smmGradeName[grade];
+}
+//성적을 불러옴: A+, A- 등 
