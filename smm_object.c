@@ -1,8 +1,6 @@
-//
 //  SMMarble
-//
+//  made by. 2114034 Yang ji won 
 #include <time.h>
-#include <string.h>
 #include <string.h>
 #include "smm_common.h"
 #include "smm_object.h"
@@ -21,6 +19,7 @@ static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] = {
 	"festival"
 };
 
+// 성적 등급
 typedef enum smmObjGrade {
 	smmObjGrade_Ap = 0,
 	smmObjGrade_A0,
@@ -81,8 +80,9 @@ void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, i
 {
 	smmObject_t* ptr;
 	
-	ptr = (smmObject_t*)malloc(sizeof(smmObject_t));
+	ptr = (smmObject_t*)malloc(sizeof(smmObject_t)); // 메모리 할당
 	
+	// 속성 설정
 	strcpy (ptr->name, name);
     ptr->objType = objType;
     ptr->type = type;
@@ -93,7 +93,7 @@ void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, i
     return ptr;
 }
 
-int smmObj_getNodeType(void* obj)
+int smmObj_getNodeType(void* obj) 
 {
 	smmObject_t* ptr = (smmObject_t*)obj;
 	

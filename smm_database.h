@@ -1,8 +1,6 @@
-//
 //  smm_database.h
 //  infection Path
-//
-//
+//  made by. 2114034 Yang ji won 
 
 #ifndef smm_database_h
 #define smm_database_h

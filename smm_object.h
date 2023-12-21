@@ -1,7 +1,6 @@
-//
 //  smm_object.h
 //  SMMarble object
-
+//  made by. 2114034 Yang ji won 
 
 #define smm_object_h
 #define SMMNODE_TYPE_LECTURE			0

@@ -1,5 +1,6 @@
 //  smm_database.c
 //  Sookmyung Marble
+//  made by. 2114034 Yang ji won 
 
 #include "smm_common.h"
 #include "smm_database.h"

@@ -1,5 +1,6 @@
 //  smm_common.h
 //  SMMarble
+//  made by. 2114034 Yang ji won 
 
 #ifndef smm_common_h
 #define smm_common_h

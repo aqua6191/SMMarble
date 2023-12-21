@@ -181,7 +181,7 @@ void actionNode(int player)
 
     switch (type)
     {
-        case SMMNODE_TYPE_LECTURE:
+        case SMMNODE_TYPE_LECTURE: 
             if (cur_player[player].energy < smmObj_getNodeEnergy(boardPtr))
             {
                 printf("\n에너지가 부족합니다.\n");
@@ -211,34 +211,35 @@ void actionNode(int player)
                 printf("수강을 포기합니다.\n\n");
             }
             break;
-
+            
+            // 식사 노드일 경우, 에너지 보충
         case SMMNODE_TYPE_RESTAURANT:
             cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
             printf("\n%d 만큼의 에너지를 보충합니다. \n\n\n", smmObj_getNodeEnergy(boardPtr));
             break;
 
-        case SMMNODE_TYPE_LABORATORY:
+        case SMMNODE_TYPE_LABORATORY: // 실험실 노드는 별도의 처리X
             break;
 
-        case SMMNODE_TYPE_HOME:
+        case SMMNODE_TYPE_HOME: // 집 노드일 경우, 에너지 보충
             cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
             break;
 
-        case SMMNODE_TYPE_GOTOLAB:
+        case SMMNODE_TYPE_GOTOLAB: // "전자공학실험실" 노드로 이동 및 실험실 플래그 설정
             labPosition = checkLecture(LISTNO_NODE, "전자공학실험실");
             cur_player[player].position = labPosition;
             cur_player[player].Lab = 1;
             break;
 
-        case SMMNODE_TYPE_FOODCHANCE:
+        case SMMNODE_TYPE_FOODCHANCE: // 음식 카드 노드일 경우, 플레이어의 에너지 보충
             randomFoodCard = rand() % smmdb_len(LISTNO_FOODCARD);
             CardName = smmObj_getNodeName(smmdb_getData(LISTNO_FOODCARD, randomFoodCard));
             cur_player[player].energy += smmObj_getNodeEnergy(smmdb_getData(LISTNO_FOODCARD, randomFoodCard));
 
             printf("\n선택된 음식은 %s입니다. %d 만큼의 에너지를 보충합니다.\n\n", CardName, smmObj_getNodeEnergy(smmdb_getData(LISTNO_FOODCARD, randomFoodCard)));
             break;
-
-        case SMMNODE_TYPE_FESTIVAL:
+            
+        case SMMNODE_TYPE_FESTIVAL: // 페스티벌 카드 노드일 경우,페스티벌 카드 내용 출력
             randomFestCard = rand() % smmdb_len(LISTNO_FESTCARD);
             printf("\n%s\n\n", smmObj_getNodeName(smmdb_getData(LISTNO_FESTCARD, randomFestCard)));
             break;
@@ -270,7 +271,7 @@ int main(int argc, const char * argv[])
     
     //1. import parameters ---------------------------------------------------------------------------------
     //1-1. boardConfig 
-    if ((fp = fopen(BOARDFILE,"r")) == NULL)
+    if ((fp = fopen(BOARDFILE,"r")) == NULL) // 파일 열기 실패 시 오류 메시지 출력 후 프로그램 종료
     {
         printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", BOARDFILE);
         getchar();
@@ -288,12 +289,12 @@ int main(int argc, const char * argv[])
         if (type == SMMNODE_TYPE_HOME)
         	initEnergy = energy;
 		
-		board_nr++;
+		board_nr++; // 보드 노드 수 증가
     }
     fclose(fp);
     printf("Total number of board nodes : %i\n\n", board_nr);
     
-    for (i = 0;i<board_nr;i++)
+    for (i = 0;i<board_nr;i++) // 각 보드 노드 정보 출력
     {
     	void *boardObj = smmdb_getData(LISTNO_NODE, i);
     	
@@ -305,6 +306,7 @@ int main(int argc, const char * argv[])
 	}
 
     //2. food card config 
+    // food 파일 열기 실패 시 오류 메시지 출력 후 프로그램 종료
     if ((fp = fopen(FOODFILE,"r")) == NULL)
     {
         printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FOODFILE);
@@ -324,7 +326,9 @@ int main(int argc, const char * argv[])
     fclose(fp);
 
     printf("Total number of food cards : %i\n\n", food_nr);  
+    
     //3. festival card config
+    // 페스티벌 파일 열기 실패 시 오류 메시지 출력 후 프로그램 종료
     if ((fp = fopen(FESTFILE,"r")) == NULL)
     {
     printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FESTFILE);
