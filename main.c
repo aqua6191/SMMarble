@@ -143,7 +143,7 @@ int checkLecture(int list_nr, char *lectureName)
 	
 	return -1;  // 강의를 찾지 못하면 -1 반환
 }
-// 이 플레이어가 해당 강의를 이전에 수강했는지 확인하는 함수입니다. 강의 이름을 목록에서 검색합니다.
+// 이 플레이어가 해당 강의를 이전에 수강했는지 확인하는 함수, 강의 이름을 목록에서 검색합니다. 
 
 void generatePlayers(int n, int initEnergy) 
 {
@@ -343,12 +343,11 @@ int main(int argc, const char * argv[])
     fclose(fp);
 
     
-    printf("Total number of food cards : %i\n\n", food_nr);
-     //////////////////////수정  
+    printf("Total number of food cards : %i\n\n", food_nr);  
     //3. festival card config
     if ((fp = fopen(FESTFILEPATH,"r")) == NULL)
     {
-    printf("[ERROR] %s 파일을 열 수 없습니다. 이 파일은 SMMarble.exe 파일과 같은 디렉터리에 있어야 합니다.\n", FESTFILEPATH);
+    printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FESTFILEPATH);
                     return -1;
     }
 
@@ -367,45 +366,38 @@ int main(int argc, const char * argv[])
 
     printf("총 페스티벌 카드 수 : %i\n\n", festival_nr);
     
-
-    
     //2. Player configuration ---------------------------------------------------------------------------------
     do
     {
-        //input player number to player_nr
+        // 플레이어 수를 입력받아 player_nr에 저장
         printf("\n플레이어 수를 입력하세요 :");
   		scanf("%d", &player_nr);
   		fflush(stdin);
     }
     while (player_nr<0 || player_nr > MAX_PLAYER);
 
-    cur_player = (player_t*)malloc(player_nr*sizeof(player_t));
+    cur_player = (player_t*)malloc(player_nr*sizeof(player_t)); // cur_player에 플레이어 수만큼 동적으로 메모리 할당
     
     generatePlayers(player_nr, initEnergy);
     
-
-    
-
-
     //3. SM Marble game starts ---------------------------------------------------------------------------------
     while (1) //is anybody graduated?
     {
         int dice_result;
-        int outLabNo;
+        int go_outLab;
 
         
         //4-1. initial printing
-
         printPlayerStatus();
 
         if (cur_player[turn].Lab > 0){
-        	outLabNo = rand()%MAX_DICE+1;
+        	go_outLab = rand()%MAX_DICE+1;
         	cur_player[turn].energy -= smmObj_getNodeEnergy(smmdb_getData(LISTNO_NODE, SMMNODE_TYPE_LABORATORY));
         	printf("\n%s는 실험중입니다. \n\n", cur_player[turn].name);
-	        printf("\n\nLab exodus no is. %d !!\n\n", outLabNo);
-	        if (rolldie(turn) >= outLabNo){
+	        printf("\n\nLab exodus no is. %d !!\n\n", go_outLab);
+	        if (rolldie(turn) >= go_outLab){
 	        	cur_player[turn].Lab = 0;
-	        	printf("\n\n실험이 종료되었습니다!!\n\n");
+	        	printf("\n\n실험이 종료되었습니다.\n\n");
 			}
 			else
 	        	printf("\n\n조금 더 실험해주세요!! \n\n");
@@ -413,31 +405,25 @@ int main(int argc, const char * argv[])
 		else
 		{ //Normal Process
 
-	        //4-2. die rolling (if not in experiment)
-	        
+	        // 4-2. 주사위 굴리기 (실험 중이 아닌 경우)
 	        dice_result = rolldie(turn);
 	        
-	        //4-3. go forward
+            // 4-3. 앞으로 나아가기
 	        goForward(turn, dice_result); 
 	        
-	        //graduate credit check하는 function 호출
+	        // 학점 졸업 여부를 확인하는 함수 호출
 			if(isGraduated(turn) == 1)
 				break;
-			//isGraduated() == 1이면 게임 종료 
-			//isGraduated() == 0이면  actionNode로 넘어가기 
-			
-			//4-4. take action at the destination node of the board
+			// isGraduated() == 1이면 게임 종료
+            // isGraduated() == 0이면 actionNode로 넘어가기
+			// 4-4. 보드의 목적지 노드에서 액션 수행
 	        actionNode(turn);
 
 		}
-        
         //4-5. next turn
-        
         turn ++;
         if (turn == player_nr) turn = 0;
-        
     }
-    
     
     //종료 안내 문구 출력 
     printf("\n\nCongratulations! game is end\n\n");
@@ -445,14 +431,12 @@ int main(int argc, const char * argv[])
     //플레이어의 성적표 출력 
     for (i=0;i<player_nr;i++)
 	{
-		printf("당신의 %d의 성적표\n\n", i+1);
-    	printGrades(i);
+		printf("%d의 성적표입니다.\n\n", i+1);
+    	printGrades(i); // 플레이어의 성적표 출력 함수 호출
     	printf("\n\n");
 	}
-    
     free(cur_player);
-
     system("PAUSE");
-    return 0;
+    return 0; // 프로그램 종료
 	
 }
