@@ -7,10 +7,9 @@
 #include "smm_object.h"
 #include "smm_database.h"
 #include "smm_common.h"
-
-#define BOARDFILEPATH "marbleBoardConfig.txt"
-#define FOODFILEPATH "marbleFoodConfig.txt"
-#define FESTFILEPATH "marbleFestivalConfig.txt"
+#define BOARDFILE "marbleBoardConfig.txt"
+#define FOODFILE "marbleFoodConfig.txt"
+#define FESTFILE "marbleFestivalConfig.txt"
 
 #define MAX_DICE        6 
 #define MAX_NODE		100
@@ -283,9 +282,9 @@ int main(int argc, const char * argv[])
     
     //1. import parameters ---------------------------------------------------------------------------------
     //1-1. boardConfig 
-    if ((fp = fopen(BOARDFILEPATH,"r")) == NULL)
+    if ((fp = fopen(BOARDFILE,"r")) == NULL)
     {
-        printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", BOARDFILEPATH);
+        printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", BOARDFILE);
         getchar();
         return -1;
     }
@@ -319,9 +318,9 @@ int main(int argc, const char * argv[])
     
 
     //2. food card config 
-    if ((fp = fopen(FOODFILEPATH,"r")) == NULL)
+    if ((fp = fopen(FOODFILE,"r")) == NULL)
     {
-        printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FOODFILEPATH);
+        printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FOODFILE);
         return -1;
     }
     
@@ -345,13 +344,13 @@ int main(int argc, const char * argv[])
     
     printf("Total number of food cards : %i\n\n", food_nr);  
     //3. festival card config
-    if ((fp = fopen(FESTFILEPATH,"r")) == NULL)
+    if ((fp = fopen(FESTFILE,"r")) == NULL)
     {
-    printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FESTFILEPATH);
+    printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FESTFILE);
                     return -1;
     }
 
-    printf("\n\n페스티벌 카드 구성 요소 읽는 중......\n\n");
+    printf("\n\n페스티벌 카드의 구성요소를 읽고 있습니다.\n\n");
 
     while (fscanf(fp, "%s", name) == 1) // 페스티벌 카드 문자열 읽기
     {
@@ -400,7 +399,7 @@ int main(int argc, const char * argv[])
 	        	printf("\n\n실험이 종료되었습니다.\n\n");
 			}
 			else
-	        	printf("\n\n조금 더 실험해주세요!! \n\n");
+	        	printf("\n\n실험이 아직 종료되지 않았습니다. 조금 더 필요합니다. \n\n");
 		}
 		else
 		{ //Normal Process
@@ -426,7 +425,7 @@ int main(int argc, const char * argv[])
     }
     
     //종료 안내 문구 출력 
-    printf("\n\nCongratulations! game is end\n\n");
+    printf("\n\nCongratulations! game is end. 게임이 끝났습니다.\n\n");
     
     //플레이어의 성적표 출력 
     for (i=0;i<player_nr;i++)
