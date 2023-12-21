@@ -76,12 +76,6 @@ char* smmObj_getTypeName (int type)
 /*유형의 이름을 출력할 수 있는 함수 */
 
 //1. 구조체 형식 정의
-//main.c에서 필요할 때 파일명을 .c에서 .h로 바꾸면  main에서 사용 가능 
-/*typedef enum smmObjType {
-	smmObjType_board = 0,
-	smmObjType_card,
-	smmObjType_grade
-} smmObjType_e;*/
 
 void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade)
 {
@@ -97,22 +91,13 @@ void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, i
     ptr->grade = grade;
     
     return ptr;
-    //strcpy (smm_node[smmObj_noNode].name, name);
-    //smm_node[smmObj_noNode].type = type;
-    //smm_node[smmObj_noNode].credit = credit;
-    //smm_node[smmObj_noNode].energy = energy;
-    
-    //smmObj_noNode++;
 }
-
-
 
 int smmObj_getNodeType(void* obj)
 {
 	smmObject_t* ptr = (smmObject_t*)obj;
 	
 	return ptr->type;
-    //return smm_node[node_nr].type;
 }
 
 int smmObj_getNodeCredit(void* obj)
@@ -120,7 +105,6 @@ int smmObj_getNodeCredit(void* obj)
 	smmObject_t* ptr = (smmObject_t*)obj;
 	
 	return ptr->credit;
-	//return smm_node[node_nr].credit;
 }
 
 int smmObj_getNodeEnergy(void* obj)
@@ -128,11 +112,7 @@ int smmObj_getNodeEnergy(void* obj)
 	smmObject_t* ptr = (smmObject_t*)obj;
 	
 	return ptr->energy;
-	//return smm_node[node_nr].energy;
 }
-//member retrieving
-
-
 
 //element to string
 char* smmObj_getNodeName(void* obj)
@@ -141,10 +121,8 @@ char* smmObj_getNodeName(void* obj)
 	smmObject_t* ptr = (smmObject_t*)obj;
 	
 	return ptr->name;
-    //return smmNodeName[type];
 }
 //노드의 이름을 불러옴 
-
 int smmObj_getNodeGrade(void* obj){
 	smmObject_t* ptr = (smmObject_t*)obj;
 	return ptr->grade;	
@@ -153,7 +131,6 @@ int smmObj_getNodeGrade(void* obj){
 
 char* smmObj_getGradeName(int grade)
 {
-//printf("Grade Name Check %d!!!\n", grade);
 //printf("%s\n",smmGradeName[grade]);
     return smmGradeName[grade];
 }

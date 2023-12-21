@@ -34,7 +34,7 @@
     C-
 */
 
-//object generation 객체 생성  
+//객체를 생성함  
 void smmObj_getNode(char* name, int type, int credit, int energy);
 // 멤버 검색
 
@@ -43,7 +43,7 @@ int smmObj_getNodeType(void* obj);
 int smmObj_getNodeCredit(void* obj);
 int smmObj_getNodeEnergy(void* obj);
 int smmObj_getNodeGrade(void* obj);
-char* smmObj_getGradeName(int grade); // 요소를 문자열로 변환
+char* smmObj_getGradeName(int grade); //요소를 문자열로 변환
 
 typedef enum smmObjType {
 	smmObjType_board = 0,

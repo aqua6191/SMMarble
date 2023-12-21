@@ -1,13 +1,8 @@
-//
 //  smm_database.c
 //  Sookmyung Marble
-//  Database platform code for storing marble board elements
-//  Created by Juyeop Kim on 2023/11/05.
-//
 
 #include "smm_common.h"
 #include "smm_database.h"
-
 #define LIST_END            -1
 #define MAX_LIST            LISTNO_OFFSET_GRADE+MAX_PLAYER
 
@@ -18,7 +13,6 @@ typedef struct node{
     void* next;         //pointer to the next
     void* prev;         //pointer to the next
 } node_t;
-
 
 static node_t* list_database[MAX_LIST];
 static node_t* listPtr[MAX_LIST];
@@ -85,8 +79,6 @@ static int updateIndex(int list_nr)
     return index;
 }
 
-
-
 //API function
 /*
     description : adding a data object to the list end
@@ -139,8 +131,6 @@ int smmdb_addTail(int list_nr, void* obj)
     
     return 0;
 }
-
-
 /*
     description : delete data object from the list
     input parameters : index - index'th data to delete
@@ -187,7 +177,6 @@ int smmdb_deleteData(int list_nr, int index)
     return 0;
 }
 
-
 //functions for list observation -----------------------------
 
 /*
@@ -198,7 +187,6 @@ int smmdb_len(int list_nr)
 {
     return list_cnt[list_nr];
 }
-
 
 /*
     description : get the object data
@@ -219,6 +207,5 @@ void* smmdb_getData(int list_nr, int index)
     
     if (obj == NULL)
         printf("[ERROR] smmdb_getData() : there is no data of index %i\n", index);
-    
     return obj;
 }

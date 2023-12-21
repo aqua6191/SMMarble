@@ -1,6 +1,6 @@
 //  main.c
 //  SMMarble
-//  made by. 2114034 경영학부 Yang ji won 
+//  made by. 2114034 Yang ji won 
 
 #include <time.h>
 #include <string.h>
@@ -149,7 +149,7 @@ void generatePlayers(int n, int initEnergy)
 
 // 플레이어 정보를 생성하고 초기화합니다. 이름, 위치, 에너지, 누적 학점, 졸업 상태를 포함합니다.
 
-int rolldie(int player)
+int rolldie(int player) 
 {
     char c;
     int dice_no;
@@ -193,7 +193,7 @@ void actionNode(int player)
                 break;
             } // 플레이어가 이미 들은 강의면: break
 
-            printf("\n수강하시겠습니까? Y: 1, N: press any key - "); // 수강 의사 묻기
+            printf("\n수강하시겠습니까? Yes: 1을 누르세요., NO: 아무키나 누르세요. - "); // 수강 의사 묻기
             scanf("%d", &answer);
             fflush(stdin);
             if (answer == 1)
@@ -208,7 +208,7 @@ void actionNode(int player)
             }
             else
             {
-                printf("수강 포기...\n\n");
+                printf("수강을 포기합니다.\n\n");
             }
             break;
 
@@ -303,7 +303,6 @@ int main(int argc, const char * argv[])
 			smmObj_getNodeCredit(boardObj), smmObj_getNodeEnergy(boardObj));
 		 
 	}
-    
 
     //2. food card config 
     if ((fp = fopen(FOODFILE,"r")) == NULL)
@@ -314,22 +313,16 @@ int main(int argc, const char * argv[])
     
     printf("\n\nReading food card component....\n\n");
 
-    
     while ( fscanf(fp, "%s %i", name, &energy) == 2 ) //read a food parameter set
     {
         //store the parameter set
         void *foodObj = (void*)smmObj_genObject(name, smmObjType_card, 0, 0, energy, 0);
 
         smmdb_addTail(LISTNO_FOODCARD, foodObj);
-		
-		
-        
-		
 		food_nr++;
     }
     fclose(fp);
 
-    
     printf("Total number of food cards : %i\n\n", food_nr);  
     //3. festival card config
     if ((fp = fopen(FESTFILE,"r")) == NULL)
@@ -337,7 +330,6 @@ int main(int argc, const char * argv[])
     printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FESTFILE);
                     return -1;
     }
-
     printf("\n\n페스티벌 카드의 구성요소를 읽고 있습니다.\n\n");
 
     while (fscanf(fp, "%s", name) == 1) // 페스티벌 카드 문자열 읽기
