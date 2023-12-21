@@ -37,13 +37,13 @@ typedef enum smmObjGrade {
 static char smmGradeName [9][2]={
 	"A+",
 	"A0",
-	"Am", //- 기호를 m로 나타냄 
+	"A-", 
 	"B+",
 	"B0",
-	"Bm",
+	"B-",
 	"C+",
 	"C0",
-	"Cm",
+	"C-",
 };
 //성적 이름 
 
@@ -76,17 +76,13 @@ char* smmObj_getTypeName (int type)
 /*유형의 이름을 출력할 수 있는 함수 */
 
 //1. 구조체 형식 정의
-
-
-//main.c에서 필요할 때 (genObject 부를 때) 이거를 .c에서 .h로 옮기면 main에서 사용 가능 
+//main.c에서 필요할 때 파일명을 .c에서 .h로 바꾸면  main에서 사용 가능 
 /*typedef enum smmObjType {
 	smmObjType_board = 0,
 	smmObjType_card,
 	smmObjType_grade
 } smmObjType_e;*/
 
-
-//object generation
 void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade)
 {
 	smmObject_t* ptr;
@@ -161,4 +157,4 @@ char* smmObj_getGradeName(int grade)
 //printf("%s\n",smmGradeName[grade]);
     return smmGradeName[grade];
 }
-//성적을 불러옴: A+, A- 등 
+//성적 호출  

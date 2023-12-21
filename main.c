@@ -37,26 +37,6 @@ static int player_position[MAX_PLAYER]; // 플레이어의 위치 배열 (현재 사용하지 �
 static char player_name[MAX_PLAYER][MAX_CHARNAME]; // 플레이어의 이름 배열 (현재 사용하지 않음)
 #endif
 
-// 플레이어가 졸업할 수 있는지 확인하는 함수
-int isGraduated(int player)
-{
-    // 플레이어가 Home 노드에 있고 누적 학점이 졸업 기준 이상인 경우
-    if (cur_player[player].position == 0 && cur_player[player].accumCredit >= GRADUATE_CREDIT)
-    {
-        cur_player[player].flag_graduate = 1; // 졸업 가능 상태로 플래그 설정
-    }
-    else
-    {
-        cur_player[player].flag_graduate = 0; // 그렇지 않으면 졸업 불가능 상태로 플래그 설정
-    }
-    return cur_player[player].flag_graduate;
-    // 만약 플레이어가 Home 노드에 있고 누적 학점이 졸업 기준 이상이라면 1을 반환하여 졸업 가능함을 나타냄
-} // 플레이어가 졸업했는지 여부를 확인하는 함수
-
-
-
-
-
 // 주사위를 굴렸을 때 플레이어를 보드 상에서 이동시키는 함수 
 void goForward(int player, int step)
 {
@@ -75,6 +55,22 @@ void goForward(int player, int step)
            cur_player[player].name, cur_player[player].position,
            smmObj_getNodeName(boardPtr));
 }
+
+// 플레이어가 졸업할 수 있는지 확인하는 함수
+int isGraduated(int player)
+{
+    // 플레이어가 Home 노드에 있고 누적 학점이 졸업 기준 이상인 경우
+    if (cur_player[player].position == 0 && cur_player[player].accumCredit >= GRADUATE_CREDIT)
+    {
+        cur_player[player].flag_graduate = 1; // 졸업 가능 상태로 플래그 설정
+    }
+    else
+    {
+        cur_player[player].flag_graduate = 0; // 그렇지 않으면 졸업 불가능 상태로 플래그 설정
+    }
+    return cur_player[player].flag_graduate;
+    // 만약 플레이어가 Home 노드에 있고 누적 학점이 졸업 기준 이상이라면 1을 반환하여 졸업 가능함을 나타냄
+} // 플레이어가 졸업했는지 여부를 확인하는 함수
 
 void printGrades(int player)
 {
@@ -117,14 +113,6 @@ void printPlayerStatus()
 	}
 }
  // 현재 턴의 시작 시 플레이어의 상태를 출력: 이름, 누적 학점, 에너지, 현재 위치, 실험 중 여부
- 
- /*
-float calcAverageGrade(int player); //플레이어의 평균 성적 계산 
-smmGrade_e takeLecture(int player, char *lectureName, int credit); //take the lecture (insert a grade of the player)
-void* findGrade(int player, char *lectureName)
-void printGrades(int player); 
-*/
-//오류로 주석 처리  
 
 int checkLecture(int list_nr, char *lectureName)
 {
@@ -399,17 +387,14 @@ int main(int argc, const char * argv[])
 	        	printf("\n\n실험이 종료되었습니다.\n\n");
 			}
 			else
-	        	printf("\n\n실험이 아직 종료되지 않았습니다. 조금 더 필요합니다. \n\n");
+	        	printf("\n\n실험이 아직 종료되지 않았습니다. 계속하세요. \n\n");
 		}
 		else
 		{ //Normal Process
-
 	        // 4-2. 주사위 굴리기 (실험 중이 아닌 경우)
 	        dice_result = rolldie(turn);
-	        
             // 4-3. 앞으로 나아가기
 	        goForward(turn, dice_result); 
-	        
 	        // 학점 졸업 여부를 확인하는 함수 호출
 			if(isGraduated(turn) == 1)
 				break;
@@ -417,7 +402,6 @@ int main(int argc, const char * argv[])
             // isGraduated() == 0이면 actionNode로 넘어가기
 			// 4-4. 보드의 목적지 노드에서 액션 수행
 	        actionNode(turn);
-
 		}
         //4-5. next turn
         turn ++;
